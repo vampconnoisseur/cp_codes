@@ -79,6 +79,73 @@ void solve()
     cout << cost << endl;
 }
 
+void solve1()
+{
+    long long n, p;
+    cin >> n >> p;
+
+    vector<long long> a(n);
+    vector<long long> b(n);
+    for (long long i = 0; i < n; i++)
+    {
+        cin >> a[i];
+    }
+    for (long long i = 0; i < n; i++)
+    {
+        cin >> b[i];
+    }
+
+    vector<pair<long long, long long>> v;
+    for (long long i = 0; i < n; i++)
+    {
+        v.emplace_back(b[i], a[i]);
+    }
+
+    sort(v.begin(), v.end());
+
+    long long i = 0;
+    long long people = 0;
+    long long cost = 0;
+    bool brake = false;
+
+    cost += p;
+    people++;
+
+    while (people < n)
+    {
+        long long c = v[i].first;
+        long long m = v[i].second;
+
+        if (c > p)
+        {
+            brake = true;
+            break;
+        }
+
+        if (m <= n - people)
+        {
+            people += m;
+            cost += m * c;
+        }
+        else
+        {
+            long long remaining_people = n - people;
+            cost += remaining_people * c;
+            people = n;
+        }
+
+        i++;
+    }
+
+    if (brake)
+    {
+        long long remaining_people = n - people;
+        cost += remaining_people * p;
+    }
+
+    cout << cost << endl;
+}
+
 int main()
 {
     int t;
@@ -86,7 +153,7 @@ int main()
 
     while (t--)
     {
-        solve();
+        solve1();
     }
 
     return 0;
