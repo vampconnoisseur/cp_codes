@@ -1,4 +1,5 @@
-#include <bits/stdc++.h>
+#include <iostream>
+// #include <bits/stdc++.h>
 using namespace std;
 
 #define ll long long
@@ -28,7 +29,44 @@ using namespace std;
 #pragma GCC optimize("O3,unroll-loops")
 #pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
 
-void solve() {}
+void solve()
+{
+    int n;
+    cin >> n;
+
+    string s;
+    cin >> s;
+
+    bool ans = true;
+    vpii v;
+
+    rep(i, 0, n)
+    {
+        if (s[i] == 's')
+        {
+            v.pb(mp(i, n - 1));
+        }
+        else if (s[i] == 'p')
+        {
+            v.pb(mp(0, i));
+        }
+    }
+
+    bool firstZero = true;
+    bool lastN = true;
+    fore(e, v)
+    {
+        if (e.fi != 0)
+            firstZero = false;
+        if (e.se != n - 1)
+            lastN = false;
+    }
+
+    if (firstZero || lastN)
+        yes;
+    else
+        no;
+}
 
 int main()
 {

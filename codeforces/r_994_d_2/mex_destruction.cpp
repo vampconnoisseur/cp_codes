@@ -1,4 +1,5 @@
-#include <bits/stdc++.h>
+#include <iostream>
+// #include <bits/stdc++.h>
 using namespace std;
 
 #define ll long long
@@ -12,7 +13,6 @@ using namespace std;
 #define vll vector<long long>
 #define pii pair<int, int>
 #define vvi vector<vector<int>>
-#define vpii vector<pair<int, int>>
 
 #define minpq priority_queue<int, vector<int>, greater<int>>
 #define maxpq priority_queue<int>
@@ -28,7 +28,37 @@ using namespace std;
 #pragma GCC optimize("O3,unroll-loops")
 #pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
 
-void solve() {}
+void solve()
+{
+    int n;
+    cin >> n;
+
+    vi v(n);
+    rep(i, 0, n)
+    {
+        cin >> v[i];
+    }
+
+    int islands = 0;
+    int count = 0;
+
+    rep(i, 0, n)
+    {
+        if (v[i] != 0)
+            count++;
+        else
+            count = 0;
+        if (count == 1)
+            islands++;
+    }
+
+    if (islands > 1)
+        cout << 2 << endl;
+    else if (islands == 1)
+        cout << 1 << endl;
+    else
+        cout << 0 << endl;
+}
 
 int main()
 {
