@@ -30,7 +30,39 @@ using namespace std;
 #pragma GCC optimize("O3,unroll-loops")
 #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,avx2,lzcnt,fma,tune=native")
 
-void solve() {}
+ll getCount(const vll &v, ll s)
+{
+    ll cnt = 0;
+    vll b;
+    fore(e, v)
+    {
+        int idx = upper_bound(all(b), s - e) - b.begin();
+        cnt += idx;
+        b.pb(e);
+    }
+
+    return cnt;
+}
+
+void solve()
+{
+    ll n, x, y;
+    cin >> n >> x >> y;
+
+    ll sum = 0;
+    vll v;
+    rep(i, 0, n)
+    {
+        ll a;
+        cin >> a;
+        v.pb(a);
+        sum += a;
+    }
+
+    SORT(v);
+
+    cout << getCount(v, sum - x) - getCount(v, sum - y - 1) << endl;
+}
 
 int main()
 {
