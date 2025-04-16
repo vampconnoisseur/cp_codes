@@ -40,34 +40,52 @@ void addPrimeDivs(int x, map<int, int> &divs) { int i = 2; while (i * i <= x) { 
 
 void solve()
 {
-    int n, m, k;
-    cin >> n >> m >> k;
+    ll norm = 0, rev = 0;
+    int q;
+    cin >> q;
 
-    vi prev(m, -1);
+    ll tot = 0, n = 0;
+    deque<ll> qNorm, qRev;
 
-    rep(i, 0, n)
+    while (q--)
     {
-        bool shift = false;
-        vi curr(m);
-        rep(j, 0, m)
+        int s;
+        cin >> s;
+
+        if (s == 1)
         {
-            int elm = ((i * m + j) % k) + 1;
-            if (elm == prev[j])
-                shift = true;
-            curr[j] = elm;
+            ll last = qNorm.back();
+            qNorm.pop_back();
+            qNorm.push_front(last);
+            norm -= last * n;
+            norm += tot;
+
+            last = qRev.front();
+            qRev.pop_front();
+            qRev.push_back(last);
+            rev -= tot;
+            rev += last * n;
+        }
+        else if (s == 2)
+        {
+            swap(norm, rev);
+            swap(qNorm, qRev);
+        }
+        else if (s == 3)
+        {
+            ll k;
+            cin >> k;
+            n++;
+
+            norm += k * n;
+            qNorm.pb(k);
+
+            qRev.push_front(k);
+            tot += k;
+            rev += tot;
         }
 
-        if (shift)
-        {
-            vi rotated(m);
-            rep(j, 0, m) rotated[j] = curr[(j + 1) % m];
-            curr = rotated;
-        }
-
-        fore(e, curr) cout << e << " ";
-        cout << endl;
-
-        prev = curr;
+        cout << norm << endl;
     }
 }
 
