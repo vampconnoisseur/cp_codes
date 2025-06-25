@@ -168,30 +168,15 @@ void solve()
         rep(j, i + 1, n - 1)
         {
             int sum = a[i] + a[j];
+            int diff = last - sum;
 
-            if (sum > last)
-            {
-                ans += n - (j + 1);
-            }
-            else if (sum == last)
-            {
-                auto it = lower_bound(a.begin() + j + 1, a.end(), sum);
-                ans += it - (a.begin() + j + 1);
-            }
-            else
-            {
-                int diff = last - sum;
+            auto ub_sum = upper_bound(a.begin() + j + 1, a.end(), sum - 1);
+            auto ub_diff = upper_bound(a.begin() + j + 1, a.end(), diff);
 
-                auto ub_sum = upper_bound(a.begin() + j + 1, a.end(), sum - 1);
-                auto ub_diff = upper_bound(a.begin() + j + 1, a.end(), diff);
+            auto l = max(a.begin() + j + 1, ub_diff);
+            auto r = min(ub_sum, a.end());
 
-                auto l = max(a.begin() + j + 1, ub_diff);
-                auto r = min(ub_sum, a.end());
-
-                int intersection = max(0, int(r - l));
-
-                ans += intersection;
-            }
+            ans += max(0, int(r - l));
         }
     }
 
