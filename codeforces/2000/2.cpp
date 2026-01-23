@@ -155,49 +155,33 @@ void primefactor() {
 
 void solve()
 {
-    int n, k;
-    cin >> n >> k;
-    string s;
-    cin >> s;
+    int n;
+    cin >> n;
 
-    int ones = count(all(s), '1');
-    int zeroes = n - ones;
+    vi a(n);
+    cin >> a;
 
-    if (ones > zeroes)
+    int left = a[0];
+    int right = a[0];
+
+    for (int i = 1; i < n; i++)
     {
-        int diff = ones - zeroes;
-        if (diff % 2 != 0)
+        if (a[i] == left - 1)
+        {
+            left = a[i];
+        }
+        else if (a[i] == right + 1)
+        {
+            right = a[i];
+        }
+        else
         {
             no;
             return;
         }
-        k -= diff / 2;
-        ones = zeroes;
-    }
-    else if (zeroes > ones)
-    {
-        int diff = zeroes - ones;
-        if (diff % 2 != 0)
-        {
-            no;
-            return;
-        }
-        k -= diff / 2;
-        zeroes = ones;
     }
 
-    if (k < 0)
-    {
-        no;
-    }
-    else if (k % 2 == 0)
-    {
-        yes;
-    }
-    else
-    {
-        no;
-    }
+    yes;
 }
 
 int main()
