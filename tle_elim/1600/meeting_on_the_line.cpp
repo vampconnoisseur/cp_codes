@@ -153,15 +153,51 @@ void primefactor() {
 }
 // clang-format on
 
-static ll ans[2000007];
-static ll a[1500][1500];
-static ll curr = 1;
+int n;
+vll x, t;
+
+double cost(double mid)
+{
+    double mx = 0.0;
+    rep(i, 0, n) mx = max(mx, abs(x[i] - mid) + (double)t[i]);
+    return mx;
+}
 
 void solve()
 {
-    int n;
     cin >> n;
-    cout << ans[n] << '\n';
+    x.resize(n);
+    t.resize(n);
+    cin >> x;
+    cin >> t;
+
+    double lo = -1e9, hi = 1e9;
+    const double eps = 1e-7;
+
+    rep(it, 0, 100)
+    {
+        double mid = (lo + hi) / 2.0;
+
+        double fmid = cost(mid);
+        double fleft = cost(mid - eps);
+        double fright = cost(mid + eps);
+
+        if (fleft > fmid && fmid > fright)
+        {
+            lo = mid;
+        }
+        else if (fright > fmid && fmid > fleft)
+        {
+            hi = mid;
+        }
+        else
+        {
+            lo = hi = mid;
+            break;
+        }
+    }
+
+    cout << fixed << setprecision(10) << (lo + hi) / 2.0 << "\n";
 }
 
 int main()
@@ -169,18 +205,7 @@ int main()
     ios::sync_with_stdio(0);
     cin.tie(0);
 
-    for (int i = 1; i < 1500; i++)
-    {
-        for (int j = i - 1; j >= 1; j--)
-        {
-            a[j][i - j] = a[j - 1][i - j] + a[j][i - j - 1] - a[j - 1][i - j - 1] + curr * curr;
-
-            ans[curr] = a[j][i - j];
-            curr++;
-        }
-    }
-
-    int t;
+    int t = 1;
     cin >> t;
     while (t--)
         solve();

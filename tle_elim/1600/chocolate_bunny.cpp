@@ -153,15 +153,43 @@ void primefactor() {
 }
 // clang-format on
 
-static ll ans[2000007];
-static ll a[1500][1500];
-static ll curr = 1;
+int ask(int x, int y)
+{
+    cout << "? " << x + 1 << ' ' << y + 1 << endl;
+    int z;
+    cin >> z;
+    return z;
+}
 
 void solve()
 {
     int n;
     cin >> n;
-    cout << ans[n] << '\n';
+
+    vi ans(n, -1);
+
+    int mx = 0;
+    rep(i, 1, n)
+    {
+        int a = ask(mx, i);
+        int b = ask(i, mx);
+
+        if (a > b)
+        {
+            ans[mx] = a;
+            mx = i;
+        }
+        else
+        {
+            ans[i] = b;
+        }
+    }
+
+    ans[mx] = n;
+
+    cout << "! ";
+    rep(i, 0, n) cout << ans[i] << ' ';
+    cout << endl;
 }
 
 int main()
@@ -169,19 +197,7 @@ int main()
     ios::sync_with_stdio(0);
     cin.tie(0);
 
-    for (int i = 1; i < 1500; i++)
-    {
-        for (int j = i - 1; j >= 1; j--)
-        {
-            a[j][i - j] = a[j - 1][i - j] + a[j][i - j - 1] - a[j - 1][i - j - 1] + curr * curr;
-
-            ans[curr] = a[j][i - j];
-            curr++;
-        }
-    }
-
-    int t;
-    cin >> t;
+    int t = 1;
     while (t--)
         solve();
 

@@ -153,15 +153,71 @@ void primefactor() {
 }
 // clang-format on
 
-static ll ans[2000007];
-static ll a[1500][1500];
-static ll curr = 1;
-
 void solve()
 {
     int n;
     cin >> n;
-    cout << ans[n] << '\n';
+
+    map<int, int> cnt_prime;
+    map<int, vi> cnt_pair_prime;
+
+    rep(i, 0, n)
+    {
+        int x;
+        cin >> x;
+
+        int tmp = x;
+        fore(p, pr)
+        {
+            if (1LL * p * p > tmp)
+                break;
+            if (tmp % p != 0)
+                continue;
+
+            int cnt = 0;
+            while (tmp % p == 0)
+            {
+                cnt++;
+                tmp /= p;
+            }
+
+            cnt_prime[p]++;
+            cnt_pair_prime[p].pb(cnt);
+
+            SORT(cnt_pair_prime[p]);
+
+            if ((int)cnt_pair_prime[p].size() > 2)
+                cnt_pair_prime[p].pop_back();
+        }
+
+        if (tmp > 1)
+        {
+            cnt_prime[tmp]++;
+            cnt_pair_prime[tmp].pb(1);
+
+            SORT(cnt_pair_prime[tmp]);
+
+            if ((int)cnt_pair_prime[tmp].size() > 2)
+                cnt_pair_prime[tmp].pop_back();
+        }
+    }
+
+    ll ans = 1;
+
+    fore(p, pr)
+    {
+        if (cnt_prime[p] < n - 1)
+            continue;
+
+        int cnt = cnt_pair_prime[p][0];
+        if (cnt_prime[p] == n)
+            cnt = cnt_pair_prime[p][1];
+
+        while (cnt--)
+            ans *= p;
+    }
+
+    cout << ans << "\n";
 }
 
 int main()
@@ -169,19 +225,7 @@ int main()
     ios::sync_with_stdio(0);
     cin.tie(0);
 
-    for (int i = 1; i < 1500; i++)
-    {
-        for (int j = i - 1; j >= 1; j--)
-        {
-            a[j][i - j] = a[j - 1][i - j] + a[j][i - j - 1] - a[j - 1][i - j - 1] + curr * curr;
-
-            ans[curr] = a[j][i - j];
-            curr++;
-        }
-    }
-
-    int t;
-    cin >> t;
+    int t = 1;
     while (t--)
         solve();
 

@@ -153,15 +153,59 @@ void primefactor() {
 }
 // clang-format on
 
-static ll ans[2000007];
-static ll a[1500][1500];
-static ll curr = 1;
+static const int MAXV = 1000;
+vi distv(MAXV + 1, INF);
+
+void preprocess()
+{
+    distv[1] = 0;
+
+    rep(i, 1, MAXV + 1)
+    {
+        rep(x, 1, i + 1)
+        {
+            int jump = i / x;
+            int next_val = i + jump;
+
+            if (next_val <= MAXV)
+            {
+                distv[next_val] = min(distv[next_val], distv[i] + 1);
+            }
+        }
+    }
+}
 
 void solve()
 {
     int n;
-    cin >> n;
-    cout << ans[n] << '\n';
+    ll k;
+    cin >> n >> k;
+
+    vi b(n), c(n);
+    cin >> b;
+    cin >> c;
+
+    vi w(n);
+    ll sumW = 0;
+    rep(i, 0, n)
+    {
+        w[i] = distv[b[i]];
+        sumW += w[i];
+    }
+
+    ll K = min(k, sumW);
+
+    vll dp(K + 1, 0);
+
+    rep(i, 0, n)
+    {
+        rrep(j, K, w[i])
+        {
+            dp[j] = max(dp[j], dp[j - w[i]] + c[i]);
+        }
+    }
+
+    cout << *max_element(all(dp)) << '\n';
 }
 
 int main()
@@ -169,16 +213,7 @@ int main()
     ios::sync_with_stdio(0);
     cin.tie(0);
 
-    for (int i = 1; i < 1500; i++)
-    {
-        for (int j = i - 1; j >= 1; j--)
-        {
-            a[j][i - j] = a[j - 1][i - j] + a[j][i - j - 1] - a[j - 1][i - j - 1] + curr * curr;
-
-            ans[curr] = a[j][i - j];
-            curr++;
-        }
-    }
+    preprocess();
 
     int t;
     cin >> t;

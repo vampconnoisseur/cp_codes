@@ -153,15 +153,65 @@ void primefactor() {
 }
 // clang-format on
 
-static ll ans[2000007];
-static ll a[1500][1500];
-static ll curr = 1;
-
 void solve()
 {
-    int n;
-    cin >> n;
-    cout << ans[n] << '\n';
+    string s;
+    cin >> s;
+    long long pos;
+    cin >> pos;
+
+    int n = s.size();
+
+    long long k = ((2LL * n + 1) - sqrt((long double)(2LL * n + 1) * (2LL * n + 1) - 8LL * pos)) / 2;
+
+    long long used = k * (2LL * n - k + 1) / 2;
+    if (used >= pos)
+    {
+        k--;
+        used = k * (2LL * n - k + 1) / 2;
+    }
+
+    pos -= used;
+
+    vector<char> st;
+    int i = 0;
+
+    for (; i < n; i++)
+    {
+        char c = s[i];
+        while (!st.empty() && k > 0 && st.back() > c)
+        {
+            st.pop_back();
+            k--;
+        }
+        st.pb(c);
+        if (k == 0)
+        {
+            i++;
+            break;
+        }
+    }
+
+    while (k > 0 && !st.empty())
+    {
+        st.pop_back();
+        k--;
+    }
+
+    string left = "";
+    while (!st.empty())
+    {
+        left.pb(st.back());
+        st.pop_back();
+    }
+    rev(left);
+
+    string final_str = left;
+
+    if (i < n)
+        final_str += s.substr(i);
+
+    cout << final_str[pos - 1];
 }
 
 int main()
@@ -169,18 +219,7 @@ int main()
     ios::sync_with_stdio(0);
     cin.tie(0);
 
-    for (int i = 1; i < 1500; i++)
-    {
-        for (int j = i - 1; j >= 1; j--)
-        {
-            a[j][i - j] = a[j - 1][i - j] + a[j][i - j - 1] - a[j - 1][i - j - 1] + curr * curr;
-
-            ans[curr] = a[j][i - j];
-            curr++;
-        }
-    }
-
-    int t;
+    int t = 1;
     cin >> t;
     while (t--)
         solve();

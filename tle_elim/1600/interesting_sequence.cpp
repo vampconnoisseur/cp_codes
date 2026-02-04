@@ -153,15 +153,49 @@ void primefactor() {
 }
 // clang-format on
 
-static ll ans[2000007];
-static ll a[1500][1500];
-static ll curr = 1;
-
 void solve()
 {
-    int n;
-    cin >> n;
-    cout << ans[n] << '\n';
+    ll n, x;
+    cin >> n >> x;
+
+    const int MAXB = 62;
+
+    ll L = 0;
+    ll R = (ll)5e18;
+
+    rep(i, 0, MAXB)
+    {
+        int bn = (n >> i) & 1;
+        int bx = (x >> i) & 1;
+
+        if (bn == 0 && bx == 1)
+        {
+            cout << -1 << "\n";
+            return;
+        }
+
+        ll suffix = n & ((1LL << i) - 1);
+        ll all_ones_suffix = (1LL << i) - 1;
+        ll diff = all_ones_suffix - suffix + 1;
+
+        if (bn == 1 && bx == 1)
+        {
+            R = min(R, diff - 1);
+        }
+
+        if (bn == 1 && bx == 0)
+        {
+            L = max(L, diff);
+        }
+    }
+
+    if (L > R)
+    {
+        cout << -1 << "\n";
+        return;
+    }
+
+    cout << n + L << "\n";
 }
 
 int main()
@@ -169,18 +203,7 @@ int main()
     ios::sync_with_stdio(0);
     cin.tie(0);
 
-    for (int i = 1; i < 1500; i++)
-    {
-        for (int j = i - 1; j >= 1; j--)
-        {
-            a[j][i - j] = a[j - 1][i - j] + a[j][i - j - 1] - a[j - 1][i - j - 1] + curr * curr;
-
-            ans[curr] = a[j][i - j];
-            curr++;
-        }
-    }
-
-    int t;
+    int t = 1;
     cin >> t;
     while (t--)
         solve();
