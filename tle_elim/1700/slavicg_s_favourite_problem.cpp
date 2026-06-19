@@ -155,59 +155,71 @@ void primefactor() {
 
 void solve()
 {
-    int n, k;
-    cin >> n >> k;
+    int n, a, b;
+    cin >> n >> a >> b;
 
-    if (k == 1)
+    vector<vector<pair<int, ll>>> adj(n + 1);
+
+    rep(i, 0, n - 1)
     {
-        cout << 1 << "\n";
-        return;
+        int u, v;
+        ll w;
+        cin >> u >> v >> w;
+
+        adj[u].pb({v, w});
+        adj[v].pb({u, w});
     }
 
-    vector<int> dp(n, 1);
+    vector<ll> s;
 
-    long long ans = 1;
-
-    bool flow_left = true;
-
-    for (int age = 1; age <= k - 1; age++)
+    function<void(int, int, ll)> dfsA = [&](int u, int p, ll xr)
     {
-        long long current_layer_hits = 0;
-        for (int x : dp)
+        if (u == b)
+            return;
+
+        s.pb(xr);
+
+        for (auto &[v, w] : adj[u])
         {
-            current_layer_hits = (current_layer_hits + x) % MOD;
+            if (v == p)
+                continue;
+
+            dfsA(v, u, xr ^ w);
         }
-        ans = (ans + current_layer_hits) % MOD;
+    };
 
-        vector<int> new_dp(n);
-        long long current_sum = 0;
+    dfsA(a, 0, 0);
 
-        if (flow_left)
+    sort(s.begin(), s.end());
+
+    bool found = false;
+
+    function<void(int, int, ll)> dfsB = [&](int u, int p, ll xr)
+    {
+        if (found)
+            return;
+
+        if (u != b && binary_search(s.begin(), s.end(), xr))
         {
-            for (int i = n - 1; i >= 0; i--)
-            {
-                new_dp[i] = current_sum;
-                current_sum = (current_sum + dp[i]) % MOD;
-            }
-            flow_left = false;
+            found = true;
+            return;
         }
-        else
+
+        for (auto &[v, w] : adj[u])
         {
-            for (int i = 0; i < n; i++)
-            {
-                new_dp[i] = current_sum;
-                current_sum = (current_sum + dp[i]) % MOD;
-            }
-            flow_left = true;
+            if (v == p)
+                continue;
+
+            dfsB(v, u, xr ^ w);
         }
+    };
 
-        dp = new_dp;
+    dfsB(b, 0, 0);
 
-        if (current_sum == 0)
-            break;
-    }
-
-    cout << ans << "\n";
+    if (found)
+        yes;
+    else
+        no;
 }
 
 int main()
